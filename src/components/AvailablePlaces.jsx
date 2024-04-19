@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { log } from '../log.js';
 import Error from './Error.jsx';
 import { sortPlacesByDistance } from '../loc.js';
+import { fetchAvailablePlaces } from '../http.js';
 
 export default function AvailablePlaces({ onSelectPlace }) {
   log('<AvailablePlaces /> rendered', 1);
@@ -15,14 +16,12 @@ export default function AvailablePlaces({ onSelectPlace }) {
     const fetchPlaces = async () => {
       setIsFetching(true);
       try {
-        const response = await fetch('http://localhost:3000/places');
-        const data = await response.json();
-        if (!response.ok) throw new Error('Failed to fetch places');
+        const places = await fetchAvailablePlaces();
         //we can't use async/await with getCurrentPosition because it doesn't deliver a promise, but this is an asyncronous method that will execute
         //the function (that we define inside) after it gets the current position.
         navigator.geolocation.getCurrentPosition((position) => {
           const sortedPlaces = sortPlacesByDistance(
-            data.places,
+            places,
             position.coords.latitude,
             position.coords.longitude,
           );
