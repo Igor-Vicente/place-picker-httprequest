@@ -8,8 +8,9 @@ import { fetchAvailablePlaces } from '../http.js';
 
 export default function AvailablePlaces({ onSelectPlace }) {
   log('<AvailablePlaces /> rendered', 1);
-  const [isFetching, setIsFetching] = useState(false);
   const [availablePlaces, setAvailablePlaces] = useState([]);
+  //These states below are commonly used to handle external requests
+  const [isFetching, setIsFetching] = useState(false);
   const [error, setError] = useState();
 
   useEffect(() => {

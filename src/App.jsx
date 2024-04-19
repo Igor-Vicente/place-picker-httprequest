@@ -25,7 +25,10 @@ function App() {
     setModalIsOpen(false);
   }
 
+  //in this component we are neither dealing with 'error state' nor 'isFetching state', instead we are updating the userPlaces immediately
+  //and only after that we make a request to update the backend, but if the request fails we should set the userPlace as it was.
   async function handleSelectPlace(selectedPlace) {
+    //updating the userPlaces state
     setUserPlaces((prevPickedPlaces) => {
       if (!prevPickedPlaces) {
         prevPickedPlaces = [];
@@ -35,11 +38,12 @@ function App() {
       }
       return [selectedPlace, ...prevPickedPlaces];
     });
-
+    //updating the backend to match the state of the application
     try {
       await updateUserPlaces([selectedPlace, ...userPlaces]);
     } catch (err) {
-      //...
+      //If the backend update fails, we must return the application state (it works as a rollback)
+      setUserPlaces(userPlaces);
     }
   }
 
